@@ -4,9 +4,13 @@
 
 {% block body %}
 
+<div class="articles">
 {% for post in posts %}
-    {{ post.title }}
-    <a href="{{ path('post_show', {'id': post.id}) }}" class="btn-primary">Lire la suite</a>
+    <div class="article">
+        {{ post.title }}
+        <a href="{{ path('post_show', {'id': post.id}) }}" class="btn-primary">Lire la suite</a>
+    </div>
 {% endfor %}
+</div>
 
 {% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un nouvel article{% endblock %}
+
+{% block body %}
+    <h1>Créer un nouvel article</h1>
+
+    {% form_theme formPost 'foundation_6_layout.html.twig' %}
+    {{ form_start(formPost) }}
+
+    {{ form_row(formPost.title, {'attr': {'placeholder': "Titre de l'article"}}) }}
+    {{ form_row(formPost.content, {'attr': {'placeholder': "Contenu de l'article"}}) }}
+
+    <button type="submit" class="btn btn-success">
+            Ajouter l'article
+    </button>
+
+    {{ form_end(formPost) }}
+
+
+{% endblock %}

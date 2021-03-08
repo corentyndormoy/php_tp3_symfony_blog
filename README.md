@@ -111,7 +111,15 @@ Le ParamConverter permet de convertir les paramètres de la requête en objet.
 *Source: https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html*
 
 ## Qu'est-ce qu'un formulaire Symfony ?
-Un formulaire Symfony est un formulaire qui reprend les champs d'une entité.
+Un formulaire Symfony est un formulaire (dont chaque champ est lui même un form) qui reprend les champs d'une entité.
 
 ## Quels avantages offrent l'usage d'un formulaire ?
-Les formulaires Symfony dont facilement personnalisable.
+Les formulaires Symfony sont facilement personnalisable.
+
+## Quelles sont les différentes personalisations de formulaire qui peuvent être faites dans Symfony ?
+On peut appliquer un thème:
+- à un tous les formulaires;
+- à un seul formulaire;
+- à plusieurs formulaires.
+
+*Source: https://symfony.com/doc/current/form/form_themes.html*
