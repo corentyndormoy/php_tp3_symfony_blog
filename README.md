@@ -101,6 +101,10 @@ Par exemple pour la création d'un poste et qu'on doit choisir un utilisateur, c
 Un contrôleur ne devrait pas avoir plus de 5 méthodes
 Une méthode de contrôlleur ne devrait pas contenir plus de 20 lignes
 
+#### Créer un contrôleur:
+```php bin/console make:controller```
+En plus de créer le contrôleur avec une méthode d'index; cela créé un petit modèle de template.
+
 ## Qu'est-ce que le ParamConverter ? À quoi sert le Doctrine Param Converter ?
 Le ParamConverter permet de convertir les paramètres de la requête en objet.
 

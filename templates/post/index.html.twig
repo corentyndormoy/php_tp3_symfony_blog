@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page des articles{% endblock %}
+
+{% block body %}
+
+{% for post in posts %}
+    {{ post.title }}
+    <a href="{{ path('post_show', {'id': post.id}) }}" class="btn-primary">Lire la suite</a>
+{% endfor %}
+
+{% endblock %}
