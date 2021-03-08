@@ -112,6 +112,7 @@ Le ParamConverter permet de convertir les paramètres de la requête en objet.
 
 ## Qu'est-ce qu'un formulaire Symfony ?
 Un formulaire Symfony est un formulaire (dont chaque champ est lui même un form) qui reprend les champs d'une entité.
+La commande pour créer un formulaire: ```php bin/console make:form```
 
 ## Quels avantages offrent l'usage d'un formulaire ?
 Les formulaires Symfony sont facilement personnalisable.
@@ -123,3 +124,124 @@ On peut appliquer un thème:
 - à plusieurs formulaires.
 
 *Source: https://symfony.com/doc/current/form/form_themes.html*
+
+## Définir les termes suivants : Encoder, Provider, Firewall, Access Control, Role, Voter
+*Source: https://symfony.com/doc/current/security.html*
+### Encoder
+Encoder permet de chiffrer. C'est dans ```config/packages/security.yaml``` qu'on choisit dans quelle classe l'utiliser, et quel algorithme utiliser pour chiffrer.
+
+*Source: https://symfony.com/doc/current/security/named_encoders.html*
+
+### Provider
+Provider permet de gérer les sessions (garder l'utilisateur authentifié).
+
+*Source: https://symfony.com/doc/current/security/user_provider.html*
+
+### Firewall
+Le Firewall permet de restreindre l'accès à certaines informations.
+Ces restrictions peuvent se faire en fonction:
+- d'un chemin;
+- d'un hôte;
+- d'une méthode HTTP;
+- d'un service.
+
+*Source: https://symfony.com/doc/current/security/firewall_restriction.html*
+
+### Access Control
+L'access control permet de restreindre l'accès à certaines pages, notamment en fonction du rôle.
+
+*Source: https://symfony.com/doc/current/security/access_control.html*
+*Source: https://symfonycasts.com/screencast/symfony-security/access-control*
+
+### Role
+Les rôles permettent de grouper des utilisateurs pour leur donner des droits et des restrictions (généralement pour accéder à des pages).
+
+*Source: https://symfony.com/doc/current/security.html#roles*
+*Source: https://symfony.com/doc/current/security.html#hierarchical-roles*
+
+### Voter
+Le voter permet de gérer les permissions.
+
+*Source: https://symfony.com/doc/current/security/voters.html*
+
+## Qu'est-ce que FOSUserBundle ? Pourquoi ne pas l'utiliser ?
+FOSUserBundle est un bundle de Symfony qui premet de simplifier la gérance des utilisateurs.
+On ne l'utilise pas car on peut gérer les utilisateurs et les permissions sans ce bundle (et ainsi éviter une dépendance).
+
+*Source: https://symfony.com/doc/2.x/bundles/EasyAdminBundle/integration/fosuserbundle.html*
+
+## Définir les termes suivants : Argon2i, Bcrypt, Plaintext, BasicHTTP
+### Argon2i
+Argon2 est une fonction de dérivation de clé. En d'autres termes, cela permet de crypter une chaine de caractère (mot de passe).
+
+*Source: https://fr.wikipedia.org/wiki/Argon2"
+
+### Bcrypt
+bcrypt est une fonction de hachage. En d'autres termes, cela permet de crypter une chaine de caractère (mot de passe).
+
+*Source: https://fr.wikipedia.org/wiki/Bcrypt*
+
+### Plaintext
+Plaintext signifie 'Text en clair'. Il est donc nécessaire de le changer par un algorithme de hachage.
+Exemple, passer de:
+```
+# config/packages/security.yaml
+security:
+    # ...
+
+    encoders:
+        Symfony\Component\Security\Core\User\User: plaintext
+    # ...
+```
+en
+```
+# config/packages/security.yaml
+security:
+    # ...
+
+    encoders:
+        Symfony\Component\Security\Core\User\User:
+            algorithm: bcrypt
+            cost: 12
+```
+
+*Source: https://symfony.com/doc/4.0/security.html#b-configuring-how-users-are-loaded*
+
+### BasicHTTP
+BasicHTTP permet de valider les authentifications HTTP.
+
+*Source: https://symfony.com/doc/current/security/auth_providers.html*
+
+## Expliquer le principe de hachage.
+Le hachage, c'est le fait de rendre une chaine de caractère non reconnaissable. Elle est changée en une autre chaine de caractère.
+Chiffrer un mot de passe permet d'éviter que les hébergeurs puissent lire le mot de passe en base de données.
+
+*Source: https://fr.wikipedia.org/wiki/Fonction_de_hachage*
+
+## Authentification
+Pour créer un formulaire d'authentification, utiliser la commande suivante:
+```php bin/console make:auth```
+
+*Source: https://symfony.com/doc/current/security/form_login_setup.html*
+
+## Faire un schema expliquant quelle méthode est appelée dans quel ordre dans le LoginFormAuthenticator . Définir l'objectif de chaque méthodes du fichier.
+### 1.supports
+La méthode *supports* vérifie que l'utilisateur envoie une demande d'authentification provenant de la page de login (app_login) et que la requête est bien de type POST.
+
+### 2.getCredentials
+Si la méthode *supports* retourne *false*, alors le processus d'authentification s'arrête.
+En revanche, si elle retourne *true*, alors il appelle la méthode *getCredentials*.
+Cette dernière retourne l'username, le mot de passe et un token.
+
+### 3.getUser
+A partir des informations récupérées depuis la fonction *getCredentials*, la méthode *getUser* permet de retourner un Utilisateur (ou *null* si n'est pas trouvé; dans ce cas, le processus d'authentification est arrêté).
+
+### 4.checkCredentials
+Si la méthode *getUser* trouve un Utilisateur, alors la méthode *checkCredentials* est appelée à son tour.
+Cette dernière permet de vérifier si le mot de passe (ou d'autres informations) est correcte.
+Si elle retourne *true*, alors l'utilisateur s'authentifie, sinon le processus d'authentification s'arrête.
+
+*Source: https://symfonycasts.com/screencast/symfony-security/login-form-authenticator*
+
+## Inscription
+Pour créer un formulaire d'inscription, il faut utiliser la commande: ```php bin/console make:registration-form```
