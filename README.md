@@ -79,3 +79,35 @@ Dans .env.local, décommenter la ligne de DATABASE_URL utilisant le SQLite; et c
 Enfin, on peut utiliser la commande ```php bin/console make:migration``` pour créer un fichier de migration (une version).
 Pour lancer la migration (pour effectuer les modifications de la base de données avec les dernières versions):
 ```php bin/console doctrine:migrations:migrate```
+
+## Qu'est-ce que EasyAdmin ?
+EasyAdmin permet de créer des pages d'administration back-end.
+Installation:
+```composer require easycorp/easyadmin-bundle```
+
+*Source: https://symfony.com/doc/current/bundles/EasyAdminBundle/index.html*
+
+## Pourquoi doit-on implémenter des méthodes to string dans nos entités?
+On doit implémenter des méthodes to string dans nos entités pour pouvoir les utiliser dans notre Dashboard.
+Par exemple pour la création d'un poste et qu'on doit choisir un utilisateur, cela appelera automatiquement la méthode toString.
+```
+    public function __toString(): string 
+    {
+        return $this->username();
+    }
+```
+
+### Contrôleur, bonne pratique:
+Un contrôleur ne devrait pas avoir plus de 5 méthodes
+Une méthode de contrôlleur ne devrait pas contenir plus de 20 lignes
+
+## Qu'est-ce que le ParamConverter ? À quoi sert le Doctrine Param Converter ?
+Le ParamConverter permet de convertir les paramètres de la requête en objet.
+
+*Source: https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html*
+
+## Qu'est-ce qu'un formulaire Symfony ?
+Un formulaire Symfony est un formulaire qui reprend les champs d'une entité.
+
+## Quels avantages offrent l'usage d'un formulaire ?
+Les formulaires Symfony dont facilement personnalisable.

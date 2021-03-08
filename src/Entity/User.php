@@ -151,4 +151,12 @@ class User
 
         return $this;
     }
+
+    /**
+     * Méthode toString. Retourne le nom de l'utilisateur.
+     */
+    public function __toString(): string 
+    {
+        return $this->username;
+    }
 }
