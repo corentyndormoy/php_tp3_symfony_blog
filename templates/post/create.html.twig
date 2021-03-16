@@ -5,7 +5,7 @@
 {% block body %}
     <h1>Créer un nouvel article</h1>
 
-    {% form_theme formPost 'foundation_6_layout.html.twig' %}
+    {% form_theme formPost 'bootstrap_4_horizontal_layout.html.twig' %}
     {{ form_start(formPost) }}
 
     {{ form_row(formPost.title, {'attr': {'placeholder': "Titre de l'article"}}) }}

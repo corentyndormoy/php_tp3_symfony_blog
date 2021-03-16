@@ -37,20 +37,22 @@ class PostController extends AbstractController
      * Crée un article
      * 
      * @param Request $request
+     * @param Security $security
      * 
      * @return Response
      */
-    public function create(Request $request): Response
+    public function create(Request $request, Security $security): Response
     {
         $post = new Post();
         $form = $this->createForm(PostType::class, $post);
 
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()){
 
             $post->setCreatedAt(new \DateTime());
             $post->setIsPublished(true);
             $post->setIsDeleted(false);
+            $post->setAuthor($security->getUser());
 
             $manager = $this->getDoctrine()->getManager();
             $manager->persist($post);
@@ -87,7 +89,8 @@ class PostController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){   
             $comment->setCreatedAt(new \DateTime())         
                     ->setPost($post)
-                    ->setIsDeleted(false);
+                    ->setIsDeleted(false)
+                    ->setAuthor($security->getUser());
     
             $manager = $this->getDoctrine()->getManager();
             $manager->persist($comment);
