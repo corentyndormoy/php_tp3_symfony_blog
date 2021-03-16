@@ -9,11 +9,15 @@
     <div class="article">
         {{ post.title }}
         <a href="{{ path('post_show', {'id': post.id}) }}" class="btn-primary">Lire la suite</a>
+        {% if is_granted('ROLE_AUTHOR') %}
+            <a href="{{ path('post_edit', {'id': post.id}) }}" class="btn-primary">Modifier</a>
+        {% endif %}
     </div>
 {% endfor %}
 </div>
 <div>
+{% if is_granted('ROLE_AUTHOR') %}
     <a href="{{ path('post_create') }}" class="btn-primary">Créer un article</a>
-</div>
+{% endif %}
 
 {% endblock %}

@@ -44,6 +44,8 @@ class PostController extends AbstractController
     public function create(Request $request, Security $security): Response
     {
         $post = new Post();
+        $this->denyAccessUnlessGranted('create', $post);
+
         $form = $this->createForm(PostType::class, $post);
 
         $form->handleRequest($request);
@@ -65,6 +67,29 @@ class PostController extends AbstractController
             'formPost' => $form->createView(),
         ]);
     }
+
+    
+    #[Route('/post/{id}/edit', name: 'post_edit')]
+    public function edit(Post $post, Request $request)
+    {
+        $this->denyAccessUnlessGranted('edit', $post);
+
+        $form = $this->createForm(PostType::class, $post);
+
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $manager = $this->getDoctrine()->getManager();
+            $manager->flush();
+    
+            return $this->redirectToRoute('post_show', ['id' => $post->getId()]);
+        }
+    
+        return $this->render('post/create.html.twig', [
+            'formPost' => $form->createView(), //envoie le formulaire pour la vue
+        ]);
+    
+    }
+
 
     #[Route('/post/{id}', name: 'post_show')]
     /**
