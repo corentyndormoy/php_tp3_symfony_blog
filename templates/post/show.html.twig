@@ -26,6 +26,22 @@
     {% endfor %}
 </section>
 
+<section>
+    <h1>Créer un nouvel article</h1>
+
+    {% form_theme formComment 'foundation_6_layout.html.twig' %}
+    {{ form_start(formComment) }}
+
+    {{ form_row(formComment.content, {'attr': {'placeholder': "Contenu du commentaire"}}) }}
+    {{ form_row(formComment.author) }}
+
+    <button type="submit" class="btn btn-success">
+            Ajouter le commentaire
+    </button>
+
+    {{ form_end(formComment) }}
+</section>
+
 <a href="{{ path('post') }}" class="btn-primary">Retour</a>
 
 {% endblock %}
