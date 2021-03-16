@@ -149,9 +149,16 @@ Ces restrictions peuvent se faire en fonction:
 
 ### Access Control
 L'access control permet de restreindre l'accès à certaines pages, notamment en fonction du rôle.
+Un exemple directement dans le Twig:
+```
+{% if is_granted('ROLE_ADMIN') %}
+    <a href="...">Delete</a>
+{% endif %}
+```
 
 *Source: https://symfony.com/doc/current/security/access_control.html*
 *Source: https://symfonycasts.com/screencast/symfony-security/access-control*
+*Source: https://symfony.com/doc/current/security.html#access-control-in-templates*
 
 ### Role
 Les rôles permettent de grouper des utilisateurs pour leur donner des droits et des restrictions (généralement pour accéder à des pages).
@@ -245,3 +252,67 @@ Si elle retourne *true*, alors l'utilisateur s'authentifie, sinon le processus d
 
 ## Inscription
 Pour créer un formulaire d'inscription, il faut utiliser la commande: ```php bin/console make:registration-form```
+
+## Services
+Définition des termes suivants:
+
+### Service
+Un service est une classe dans laquelle on dépose des méthodes qui permettent de retravailler nos objets.
+Ce sont des méthodes qui peuvent être réutilisées partout dans le projet.
+Les services permettent notamment d'arranger l'architecture de l'application.
+
+*Source: https://symfony.com/doc/current/service_container.html*
+
+### Dependency Injection
+Une injection de dépendance, c'est-à-dire passer un object à un autre.
+De ce fait, on peut avoir un service qui comprend d'autres services à sa création, et donc sont accessibles depuis ce premier.
+
+*Source: https://symfony.com/doc/current/components/dependency_injection.html*
+*Source: https://stackoverflow.com/questions/130794/what-is-dependency-injection*
+
+### Autowiring
+L'autowiring permet de passer automatiquement le bon service dans chaque méthode en lisant les informations du constructeur.
+
+*Source: https://symfony.com/doc/current/service_container/autowiring.html*
+
+### Container
+Un Container permet de rendre un service plus flexible, en y proposant le choix des arguments.
+Exemple avec une classe Mailer:
+```
+class Mailer
+{
+    private $transport;
+
+    public function __construct($transport)
+    {
+        $this->transport = $transport;
+    }
+
+    // ...
+}
+```
+
+On peut créer un container et y choisir le transport (sendmail):
+```
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+
+$containerBuilder = new ContainerBuilder();
+$containerBuilder
+    ->register('mailer', 'Mailer')
+    ->addArgument('sendmail');
+```
+
+*Source: https://symfony.com/doc/current/service_container.html*
+*Source: https://symfony.com/doc/current/components/dependency_injection.html*
+
+## Validateurs
+Les validateurs permettent de donner des contraintes sur des champs de formulaire.
+On les écrits directement dans la classe de l'entité pour avoir une validation qui se fait dans le back.
+Ainsi, on ne peut pas retirer les contraintes avec l'inspecteur.
+Cela permet d'éviter que des utilisateurs entrent n'importe quoi dans la base de données.
+
+On peut valider les données lors de la création ou la modification d'un objet.
+
+Installation avec: ```composer require symfony/validator doctrine/annotations```
+
+*Source: https://symfony.com/doc/current/validation.html*
