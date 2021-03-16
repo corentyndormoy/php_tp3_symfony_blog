@@ -315,4 +315,25 @@ On peut valider les données lors de la création ou la modification d'un objet.
 
 Installation avec: ```composer require symfony/validator doctrine/annotations```
 
+Pour ajouter une condition demandant à ce que le champ ne soit pas nul, il faut utiliser dans l'entité:
+```use Symfony\Component\Validator\Constraints as Assert;```
+Puis, en dessus de l'attribut choisis, ajouter la condition:
+```@Assert\NotBlank```
+Attention, il ne faut pas oublier de rendre nullable le mutateur du champ en ajoutant un '?'. Exemple:
+```
+    public function setTitle(?string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+```
+
+### Champ unique
+Par exemple, dans le cas d'un utilisateur, on peut souhaiter que l'username soit unique.
+Pour cela, il faut utiliser dans l'entité souhaitée:
+```use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;```
+et renseigner en dessus de la classe:
+```@UniqueEntity(fields={"username"}, message="There is already an account with this username")```
+
 *Source: https://symfony.com/doc/current/validation.html*
