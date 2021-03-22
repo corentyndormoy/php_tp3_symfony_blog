@@ -337,3 +337,14 @@ et renseigner en dessus de la classe:
 ```@UniqueEntity(fields={"username"}, message="There is already an account with this username")```
 
 *Source: https://symfony.com/doc/current/validation.html*
+
+## Serializer
+Les différentes parties du Serializer sont:
+ObjectNormalizer : utilise le composant pour accéder aux propriétés de l’objet. Cherche les propriétés public de l’objet, cherche toutes les méthodes public ayant en nom get/set/has/is/add/remove suivi d’un nom de propriété ainsi que les méthodes magiques.
+GetSetMethodNormalizer : utilise les getter/setter de l’objet. Cherche toutes les méthodes public ayant en nom get suivi d’un nom de propriété.
+PropertyNormalizer : utilise PHP reflexion pour accéder aux propriétés de l’objet. Cherche les propriétés public et private de l’objet.
+
+Tout comme les normalizers, le composant Serializer inclut plusieurs encodeurs/decodeurs de format :
+JsonEncoder, XmlEncoder, YamlEncoder et CsvEncoder.
+
+*Source: https://www.novaway.fr/blog/tech/comment-utiliser-le-serializer-symfony*
