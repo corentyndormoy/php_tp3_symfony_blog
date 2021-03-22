@@ -14,6 +14,14 @@ symfony new my_project
 ```
 composer require <components>
 ```
+
+Le CLI est un wrapper. Il permet de:
+- créer un projet
+- lancer un serveur http
+- gère la partie Cloud (le déploiement du Cloud)
+- manipuler la console
+- gérer la version de php
+
 *Source: https://symfony.com/download*
 
 
@@ -54,14 +62,21 @@ Attention, le fichier .env avec les informations sensibles ne doit pas être com
 Créé un fichier .env.local qui reprendre la syntaxe de .env, et entre les informations sensibles dans le .local.
 Ce fichier est bloqué par le .gitignore.
 
+Le .env est un fichier qui contient les clés de configuration de l'application.
+
 ## Expliquer pourquoi il faut changer le connecteur à la base de données
 Il faut changer le connecteur de la base de données car les identidiants/mot de passe peuvent (et doivent) différer entre le travail fait en local, et le projet mis en production.
+
+On change le connecteur à la base de données car par défaut, il utilise Postgre, alors que nous souhaitons utiliser SQLite.
 
 *Source: https://symfony.com/doc/current/configuration.html#config-dot-env*
 
 ## Expliquer l'intérêt des migrations d'une base de données
 Les migrations permettent de faire du versionning sur la base de données.
 Chaque migration est enregistrée dans un dossier "migrations", qui contient les requêtes permettant d'ajouter, modifier ou supprimer des tables ou des colonnes.
+
+La migration est un delta entre deux changements d'état de base de données.
+Cela permet de faire du versionning de la base de données (permet de revenir en arrière).
 
 ### Could not find driver
 Si lors de la migration (avec la commande: ```php bin/console make:migration```), les erreurs suivantes apparaissent:
@@ -80,10 +95,16 @@ Enfin, on peut utiliser la commande ```php bin/console make:migration``` pour cr
 Pour lancer la migration (pour effectuer les modifications de la base de données avec les dernières versions):
 ```php bin/console doctrine:migrations:migrate```
 
+## Exemple pour l'administration:
+- easyAdmin
+- sonata
+
 ## Qu'est-ce que EasyAdmin ?
 EasyAdmin permet de créer des pages d'administration back-end.
 Installation:
 ```composer require easycorp/easyadmin-bundle```
+
+C'est un bundle qui permet de rapidement créer une interface admin (back-office).
 
 *Source: https://symfony.com/doc/current/bundles/EasyAdminBundle/index.html*
 
@@ -97,6 +118,8 @@ Par exemple pour la création d'un poste et qu'on doit choisir un utilisateur, c
     }
 ```
 
+Permet d'afficher une chaine de caractère au lieu de l'objet.
+
 ### Contrôleur, bonne pratique:
 Un contrôleur ne devrait pas avoir plus de 5 méthodes
 Une méthode de contrôlleur ne devrait pas contenir plus de 20 lignes
@@ -108,11 +131,31 @@ En plus de créer le contrôleur avec une méthode d'index; cela créé un petit
 ## Qu'est-ce que le ParamConverter ? À quoi sert le Doctrine Param Converter ?
 Le ParamConverter permet de convertir les paramètres de la requête en objet.
 
+Par exemple, avec une route "/edit/{id}" permet transformer l'id en un objet.
+```
+    #[Route('/post/{id}/edit', name: 'post_edit')]
+    public function edit(Post $post, Request $request)
+```
+Post $post est le post d'id {id}.
+
+Fonctionne aussi pour les dates.
+
 *Source: https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html*
 
 ## Qu'est-ce qu'un formulaire Symfony ?
 Un formulaire Symfony est un formulaire (dont chaque champ est lui même un form) qui reprend les champs d'une entité.
 La commande pour créer un formulaire: ```php bin/console make:form```
+
+Un formulaire est un composant qui possède des champs.
+
+{{ form_start(form) }}
+{{ form_errors(form.name) }} 	{# positionne le message d'erreur s'il y a #}
+{{ form_label(form.name) }}		{# affiche le label #}
+{{ form_widget(form.name) }}	{# affiche le champ #}
+{{ form_row(form.name) }}		{# affiche le champ #}
+
+{{ form_rest(form) }} 			{# affiche les champs restants #}
+{{ form_end(form) }}
 
 ## Quels avantages offrent l'usage d'un formulaire ?
 Les formulaires Symfony sont facilement personnalisable.
@@ -134,6 +177,7 @@ Encoder permet de chiffrer. C'est dans ```config/packages/security.yaml``` qu'on
 
 ### Provider
 Provider permet de gérer les sessions (garder l'utilisateur authentifié).
+Méthode qui permet de récupérer les utilisateurs en base.
 
 *Source: https://symfony.com/doc/current/security/user_provider.html*
 
@@ -144,6 +188,8 @@ Ces restrictions peuvent se faire en fonction:
 - d'un hôte;
 - d'une méthode HTTP;
 - d'un service.
+
+Permet de sécuriser une partie du site. Gère la sécurité en général.
 
 *Source: https://symfony.com/doc/current/security/firewall_restriction.html*
 
@@ -156,6 +202,13 @@ Un exemple directement dans le Twig:
 {% endif %}
 ```
 
+Gère l'accès à une page:
+```
+access-control:
+	- { path: ^/admin, roles: ROLE_ADMIN }
+```
+Que toutes les pages qui commencent par la route '/admin' nécessaites le role d'admin pour y accéder.
+
 *Source: https://symfony.com/doc/current/security/access_control.html*
 *Source: https://symfonycasts.com/screencast/symfony-security/access-control*
 *Source: https://symfony.com/doc/current/security.html#access-control-in-templates*
@@ -163,11 +216,14 @@ Un exemple directement dans le Twig:
 ### Role
 Les rôles permettent de grouper des utilisateurs pour leur donner des droits et des restrictions (généralement pour accéder à des pages).
 
+Un rôle est un privilège d'accès.
+
 *Source: https://symfony.com/doc/current/security.html#roles*
 *Source: https://symfony.com/doc/current/security.html#hierarchical-roles*
 
 ### Voter
 Le voter permet de gérer les permissions.
+Il permet de sécuriser une page ou une action bien précises.
 
 *Source: https://symfony.com/doc/current/security/voters.html*
 
@@ -177,9 +233,13 @@ On ne l'utilise pas car on peut gérer les utilisateurs et les permissions sans 
 
 *Source: https://symfony.com/doc/2.x/bundles/EasyAdminBundle/integration/fosuserbundle.html*
 
+
 ## Définir les termes suivants : Argon2i, Bcrypt, Plaintext, BasicHTTP
+
 ### Argon2i
 Argon2 est une fonction de dérivation de clé. En d'autres termes, cela permet de crypter une chaine de caractère (mot de passe).
+
+C'est le standard actuel.
 
 *Source: https://fr.wikipedia.org/wiki/Argon2"
 
@@ -212,16 +272,23 @@ security:
             cost: 12
 ```
 
+Plaintext rend les chaines de caractères en clair dans la base de données (est une faille de sécuriser)
+
 *Source: https://symfony.com/doc/4.0/security.html#b-configuring-how-users-are-loaded*
 
 ### BasicHTTP
 BasicHTTP permet de valider les authentifications HTTP.
+La fenêtre de dialogue d'un navigateur (un petit formulaire de connection directement dans une pop-up du navigateur)
 
 *Source: https://symfony.com/doc/current/security/auth_providers.html*
 
 ## Expliquer le principe de hachage.
 Le hachage, c'est le fait de rendre une chaine de caractère non reconnaissable. Elle est changée en une autre chaine de caractère.
 Chiffrer un mot de passe permet d'éviter que les hébergeurs puissent lire le mot de passe en base de données.
+
+Hacher n'est pas decriptable.
+On enregistre le hache du mot de passe de l'utilisateur lors de son inscription.
+Lors de sa connection, on compare le hache de son mot de passe entré et le hache enregistré dans la base de données.
 
 *Source: https://fr.wikipedia.org/wiki/Fonction_de_hachage*
 
@@ -248,6 +315,10 @@ Si la méthode *getUser* trouve un Utilisateur, alors la méthode *checkCredenti
 Cette dernière permet de vérifier si le mot de passe (ou d'autres informations) est correcte.
 Si elle retourne *true*, alors l'utilisateur s'authentifie, sinon le processus d'authentification s'arrête.
 
+### 5.onAuthenticationSuccess
+Stock la route sur laquelle vous êtiez avant la connexion.
+C'est elle qui authentifie l'utilisateur, et renvoit sur le chemin précédent la connexion.
+
 *Source: https://symfonycasts.com/screencast/symfony-security/login-form-authenticator*
 
 ## Inscription
@@ -261,17 +332,26 @@ Un service est une classe dans laquelle on dépose des méthodes qui permettent 
 Ce sont des méthodes qui peuvent être réutilisées partout dans le projet.
 Les services permettent notamment d'arranger l'architecture de l'application.
 
+Le controller, le repository sont des services. Toutes les classes du projet sont des services.
+Les services sont centrals pour le projet de Symfony.
+
 *Source: https://symfony.com/doc/current/service_container.html*
 
 ### Dependency Injection
 Une injection de dépendance, c'est-à-dire passer un object à un autre.
 De ce fait, on peut avoir un service qui comprend d'autres services à sa création, et donc sont accessibles depuis ce premier.
 
+Le composant DependencyInjection implémente un conteneur de services compatible qui vous permet de standardiser et de centraliser la façon dont les objets sont construits dans votre application.
+Le composant DependencyInjection implémente un conteneur de services compatible PSR-11 qui vous permet de standardiser et de centraliser la façon dont les objets sont construits dans votre application.
+
 *Source: https://symfony.com/doc/current/components/dependency_injection.html*
 *Source: https://stackoverflow.com/questions/130794/what-is-dependency-injection*
 
 ### Autowiring
 L'autowiring permet de passer automatiquement le bon service dans chaque méthode en lisant les informations du constructeur.
+L'autowiring vous permet de gérer les services dans le container avec une configuration minimale.
+
+Capacité à appeler une classe depuis le paramètre d'une méthode.
 
 *Source: https://symfony.com/doc/current/service_container/autowiring.html*
 
@@ -302,6 +382,8 @@ $containerBuilder
     ->addArgument('sendmail');
 ```
 
+Le container est un registre de tous les services disponibles.
+
 *Source: https://symfony.com/doc/current/service_container.html*
 *Source: https://symfony.com/doc/current/components/dependency_injection.html*
 
@@ -329,6 +411,9 @@ Attention, il ne faut pas oublier de rendre nullable le mutateur du champ en ajo
     }
 ```
 
+Permet de valider les données qui sont dans le formulaire.
+Il gère les messages d'erreur (traduit).
+
 ### Champ unique
 Par exemple, dans le cas d'un utilisateur, on peut souhaiter que l'username soit unique.
 Pour cela, il faut utiliser dans l'entité souhaitée:
@@ -345,6 +430,19 @@ GetSetMethodNormalizer : utilise les getter/setter de l’objet. Cherche toutes 
 PropertyNormalizer : utilise PHP reflexion pour accéder aux propriétés de l’objet. Cherche les propriétés public et private de l’objet.
 
 Tout comme les normalizers, le composant Serializer inclut plusieurs encodeurs/decodeurs de format :
-JsonEncoder, XmlEncoder, YamlEncoder et CsvEncoder.
+JsonEncoder, XmlEncoder, YamlEncoder et CsvEncoder.-
+
+____
+
+Un serializer permet de transformer les données en chaines de caractères.
+
+
+Les parties sont:
+L'encoder et le Normaliser.
+(et donc inversement le denormaliser et le decoder)
 
 *Source: https://www.novaway.fr/blog/tech/comment-utiliser-le-serializer-symfony*
+
+
+## API platform
+Permet de créer une API et génére une documentation.
